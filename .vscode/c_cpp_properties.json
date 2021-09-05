@@ -3,7 +3,7 @@
     {
       "defines": [
         "ID=\"SearchFixes\"",
-        "VERSION=\"0.1.0\"",
+        "VERSION=\"1.0.0-rc.1\"",
         "__GNUC__",
         "__aarch64__"
       ],
