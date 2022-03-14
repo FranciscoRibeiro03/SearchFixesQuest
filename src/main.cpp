@@ -6,8 +6,6 @@ using namespace GlobalNamespace;
 
 #include "System/StringComparison.hpp"
 
-using namespace std;
-
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 
 // Loads the config from disk using our modInfo, then returns it for use
@@ -21,6 +19,16 @@ Configuration& getConfig() {
 Logger& getLogger() {
     static Logger* logger = new Logger(modInfo);
     return *logger;
+}
+
+void toLower(std::string& str) {
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+}
+
+bool findSubstring(std::string str, std::string substr) {
+    toLower(str);
+    toLower(substr);
+    return str.find(substr) != std::string::npos;
 }
 
 MAKE_HOOK_MATCH(BeatmapLevelFilterModel_LevelContainsText, &BeatmapLevelFilterModel::LevelContainsText, bool, IPreviewBeatmapLevel* beatmapLevel, ArrayW<StringW> searchTexts) {
@@ -39,19 +47,24 @@ MAKE_HOOK_MATCH(BeatmapLevelFilterModel_LevelContainsText, &BeatmapLevelFilterMo
 
         StringW searchTerm = searchTexts[i];
 
-        getLogger().debug("Searching for '%s' in '%s'", static_cast<std::string>(searchTerm).c_str(), static_cast<std::string>(songName).c_str());
+        // getLogger().debug("Searching for '%s' in '%s'", static_cast<std::string>(searchTerm).c_str(), static_cast<std::string>(songName).c_str()); // Debugging Stuff
 
         if (searchTerm->get_Length() == 0)
             continue;
 
         words++;
 
-        auto searchTermString = static_cast<std::string>(searchTerm);
+        bool found = findSubstring(songName, searchTerm) ||
+            findSubstring(songSubName, searchTerm) ||
+            findSubstring(songAuthorName, searchTerm) ||
+            findSubstring(levelAuthorName, searchTerm);
 
-        auto found = static_cast<std::string>(songName).find(searchTermString) != std::string::npos;
-        found = found || static_cast<std::string>(songSubName).find(searchTermString) != std::string::npos;
-        found = found || static_cast<std::string>(songAuthorName).find(searchTermString) != std::string::npos;
-        found = found || static_cast<std::string>(levelAuthorName).find(searchTermString) != std::string::npos;
+        /* Debugging stuff
+        getLogger().debug("songName: '%s'; songSubName: '%s'; songAuthorName: '%s'; levelAuthorName: '%s'; searchTermString: %s", static_cast<std::string>(songName).c_str(), static_cast<std::string>(songSubName).c_str(), static_cast<std::string>(songAuthorName).c_str(), static_cast<std::string>(levelAuthorName).c_str(), searchTermString.c_str());
+        getLogger().debug("Found: %s", found ? "true" : "false");
+        getLogger().debug("");
+        */
+
 
         if (found) matches++;
 
