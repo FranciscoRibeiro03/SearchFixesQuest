@@ -23,7 +23,7 @@ Logger& getLogger() {
     return *logger;
 }
 
-MAKE_HOOK_MATCH(BeatmapLevelFilterModel_LevelContainsText, &BeatmapLevelFilterModel::LevelContainsText, bool, IPreviewBeatmapLevel* beatmapLevel, Array<Il2CppString*>* searchTexts) {
+MAKE_HOOK_MATCH(BeatmapLevelFilterModel_LevelContainsText, &BeatmapLevelFilterModel::LevelContainsText, bool, IPreviewBeatmapLevel* beatmapLevel, ArrayW<StringW> searchTexts) {
     int words = 0;
     int matches = 0;
 
@@ -32,30 +32,28 @@ MAKE_HOOK_MATCH(BeatmapLevelFilterModel_LevelContainsText, &BeatmapLevelFilterMo
     auto songAuthorName = beatmapLevel->get_songAuthorName();
     auto levelAuthorName = beatmapLevel->get_levelAuthorName();
 
-    for (int i = 0; i < searchTexts->get_Length(); i++)
+    auto arrayLen = searchTexts.Length();
+
+    for (int i = 0; i < arrayLen; i++)
     {
 
-        if (!csstrtostr(searchTexts->get(i)).empty())
-        {
+        StringW searchTerm = searchTexts[i];
 
-            words++;
+        getLogger().debug("Searching for '%s' in '%s'", static_cast<std::string>(searchTerm).c_str(), static_cast<std::string>(songName).c_str());
 
-            auto searchTerm = searchTexts->get(i);
+        if (searchTerm->get_Length() == 0)
+            continue;
 
-            if (i == searchTexts->get_Length() - 1)
-            {
-                searchTerm = searchTerm->Substring(0, searchTerm->get_Length() - 1);
-            }
+        words++;
 
-            if (songName->IndexOf(searchTerm, 0, System::StringComparison::CurrentCultureIgnoreCase) != -1 || 
-                songSubName->IndexOf(searchTerm, 0, System::StringComparison::CurrentCultureIgnoreCase) != -1 ||
-                songAuthorName->IndexOf(searchTerm, 0, System::StringComparison::CurrentCultureIgnoreCase) != -1 ||
-                levelAuthorName->IndexOf(searchTerm, 0, System::StringComparison::CurrentCultureIgnoreCase) != -1)
-            {
-                matches++;
-            }
+        auto searchTermString = static_cast<std::string>(searchTerm);
 
-        }
+        auto found = static_cast<std::string>(songName).find(searchTermString) != std::string::npos;
+        found = found || static_cast<std::string>(songSubName).find(searchTermString) != std::string::npos;
+        found = found || static_cast<std::string>(songAuthorName).find(searchTermString) != std::string::npos;
+        found = found || static_cast<std::string>(levelAuthorName).find(searchTermString) != std::string::npos;
+
+        if (found) matches++;
 
     }
 
