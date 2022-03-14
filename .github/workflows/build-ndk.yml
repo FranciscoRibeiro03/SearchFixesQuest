@@ -1,24 +1,15 @@
 name: NDK build
 
 env:
-    module_id: SearchFixes
-    qmodName: SearchFixes
+  module_id: SearchFixes
+  qmodName: SearchFixes
+  cache-name: searchfixes_cache
 
 on:
-  workflow_dispatch:
   push:
-    paths-ignore:
-      - '**.yml'
-      - '!.github/workflows/build-ndk.yml'
-      - '**.json'
-      - '!qpm.json'
-      - '**.ps1'
-      - '!build.ps1'
-      - '!buildQmod.ps1'
-      - '!CreateQmod.ps1'
-      - '**.md'
-      - '.gitignore'
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -30,7 +21,7 @@ jobs:
       with:
         submodules: true
         lfs: true
-    
+
     - uses: seanmiddleditch/gha-setup-ninja@v3
 
     - name: Create ndkpath.txt
@@ -51,7 +42,6 @@ jobs:
       run: |
         chmod +x ./QPM/qpm-rust
         ./QPM/qpm-rust collapse
-    
     - name: QPM Dependencies Cache
       id: cache-qpm-deps
       uses: actions/cache@v2
@@ -66,7 +56,12 @@ jobs:
           ${{ runner.os }}-
     - name: QPM Restore
       run: |
+        chmod +x ./QPM/qpm-rust
         ./QPM/qpm-rust restore
+    - name: QPM Legacy fix
+      run: |
+        chmod +x ./QPM/qpm-rust
+        ./QPM/qpm-rust cache legacy-fix
     - name: List Post Restore
       run: |
         echo includes:
@@ -75,15 +70,14 @@ jobs:
         ls -la ${GITHUB_WORKSPACE}/extern/libs
         echo cache:
         ls -la $HOME/.local/share/QPM-Rust/cache
-        
-    - name: Apply Legacy Fix
-      run: |
-        ./QPM/qpm-rust cache legacy-fix
     - name: Build
       run: |
         cd ${GITHUB_WORKSPACE}
-        ./QPM/qpm-rust qmod build --include_libs "lib${module_id}.so"
         pwsh -Command ./build.ps1
+# TODO: Generate QMOD
+#        ./QPM/qpm-rust qmod build
+
+
     - name: Create Qmod
       run: |
         pwsh -Command ./createqmod.ps1 ${{env.qmodName}}
@@ -94,19 +88,11 @@ jobs:
         pattern="lib${module_id}*.so"
         files=( $pattern )
         echo ::set-output name=NAME::"${files[0]}"
-    
     - name: Upload non-debug artifact
       uses: actions/upload-artifact@v2
       with:
         name: ${{ steps.libname.outputs.NAME }}
         path: ./build/${{ steps.libname.outputs.NAME }}
-        if-no-files-found: error
-
-    - name: Upload debug artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: debug_${{ steps.libname.outputs.NAME }}
-        path: ./build/debug_${{ steps.libname.outputs.NAME }}
         if-no-files-found: error
 
     - name: Upload qmod artifact
@@ -115,3 +101,12 @@ jobs:
         name: ${{env.qmodName}}.qmod
         path: ./${{ env.qmodName }}.qmod
         if-no-files-found: error
+
+        # TODO: NEEDED?
+#    - name: Upload debug artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: debug_${{ steps.libname.outputs.NAME }}
+#        path: ./obj/local/arm64-v8a/${{ steps.libname.outputs.NAME }}
+#        if-no-files-found: error
+    # TODO: Add auto-populating releases, auto update versions, auto publish package on release
