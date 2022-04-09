@@ -6,7 +6,7 @@ Param(
 
 if ($qmodName -eq "")
 {
-    echo "Give a proper qmod name and try again"
+    Write-Output "Give a proper qmod name and try again"
     exit
 }
 $mod = "./mod.json"
@@ -45,7 +45,7 @@ $qmod = $qmodName + ".qmod"
 
 if ((-not ($clean.IsPresent)) -and (Test-Path $qmod))
 {
-    echo "Making Clean Qmod"
+    Write-Output "Making Clean Qmod"
     Move-Item $qmod $zip -Force
 }
 
