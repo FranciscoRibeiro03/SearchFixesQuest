@@ -3,14 +3,14 @@
   "name": "SearchFixes",
   "id": "SearchFixes",
   "author": "rui2015",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.21.0",
+  "packageVersion": "1.24.0",
   "description": "An improved search algorithm for Beat Saber",
   "modFiles": [
     "libSearchFixes.so"
   ],
   "libraryFiles": [
-    "libbeatsaber-hook_3_8_1.so"
+    "libbeatsaber-hook_3_10_0.so"
   ]
 }
