@@ -4,7 +4,7 @@
   "info": {
     "name": "SearchFixes",
     "id": "SearchFixes",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "url": null,
     "additionalData": {
       "overrideSoName": "libSearchFixes.so"
@@ -15,10 +15,10 @@
       "id": "beatsaber-hook",
       "versionRange": "^3.10.0",
       "additionalData": {
+        "useRelease": true,
         "extraFiles": [
           "src/inline-hook"
-        ],
-        "useRelease": true
+        ]
       }
     },
     {
