@@ -8,6 +8,13 @@
   "packageId": "com.beatgames.beatsaber",
   "packageVersion": "1.25.1",
   "description": "An improved search algorithm for Beat Saber",
+  "dependencies": [
+    {
+      "version": "^0.28.0",
+      "id": "codegen",
+      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.28.0/Codegen.qmod"
+    }
+  ],
   "modFiles": [
     "libSearchFixes.so"
   ],
