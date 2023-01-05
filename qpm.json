@@ -15,10 +15,10 @@
       "id": "beatsaber-hook",
       "versionRange": "^3.14.0",
       "additionalData": {
+        "useRelease": true,
         "extraFiles": [
           "src/inline-hook"
-        ],
-        "useRelease": true
+        ]
       }
     },
     {
