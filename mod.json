@@ -4,15 +4,15 @@
   "name": "SearchFixes",
   "id": "SearchFixes",
   "author": "rui2015",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.27.0_3631150051",
+  "packageVersion": "1.28.0_4124311467",
   "description": "An improved search algorithm for Beat Saber",
   "dependencies": [
     {
-      "version": "^0.32.0",
+      "version": "^0.33.0",
       "id": "codegen",
-      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.32.0/Codegen.qmod"
+      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.33.0/Codegen.qmod"
     }
   ],
   "modFiles": [
