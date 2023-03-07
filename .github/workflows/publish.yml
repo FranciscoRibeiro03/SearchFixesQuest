@@ -165,15 +165,13 @@ jobs:
           asset_name: ${{env.qmodName}}.qmod
           asset_content_type: application/octet-stream
 
-      # FIXME: Not uploading QMod anymore because this action broke, game version doesn't follow semver anymore
-
-      # - name: Upload QMod to Mod Repo
-      #   uses: BobbyShmurner/mod-uploader@v1.0
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     repo-token: ${{ secrets.REPO_TOKEN }}
-      #     qmod-name: ${{env.qmodName}}.qmod
-      #     tag: ${{github.ref_name}}
+      - name: Upload QMod to Mod Repo
+        uses: BobbyShmurner/mod-uploader@v1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.REPO_TOKEN }}
+          qmod-name: ${{env.qmodName}}.qmod
+          tag: ${{github.ref_name}}
 
 #      - name: Change QPM Package Info
 #        run: |
