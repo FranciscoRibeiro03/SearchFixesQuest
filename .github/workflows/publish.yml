@@ -166,7 +166,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: Upload QMod to Mod Repo
-        uses: BobbyShmurner/mod-uploader@v1.0
+        uses: BobbyShmurner/mod-uploader@v1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repo-token: ${{ secrets.REPO_TOKEN }}
